@@ -4,10 +4,15 @@ import NFTCard from "./NFTCard";
 export default function NFTGallery({ nfts, loading, address, onRefresh }) {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
-  useEffect(() => { if (address) onRefresh(); }, [address]);
+
+  useEffect(() => {
+    if (address) onRefresh();
+  }, [address, onRefresh]);
+
   const filtered = nfts
     .filter(n => !search || n.name.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => sort === "newest" ? Number(b.tokenId) - Number(a.tokenId) : sort === "oldest" ? Number(a.tokenId) - Number(b.tokenId) : a.name.localeCompare(b.name));
+
   return (
     <div className="gallery">
       <div className="gallery-header">
