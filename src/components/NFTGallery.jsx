@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import NFTCard from "./NFTCard";
 
 export default function NFTGallery({ nfts, loading, address, onRefresh }) {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("newest");
 
-  const stableRefresh = useCallback(onRefresh, []); // eslint-disable-line
-
   useEffect(() => {
-    if (address) stableRefresh();
-  }, [address, stableRefresh]);
+    if (address) onRefresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
 
   const filtered = nfts
     .filter(n => !search || n.name.toLowerCase().includes(search.toLowerCase()))
@@ -27,7 +26,9 @@ export default function NFTGallery({ nfts, loading, address, onRefresh }) {
             Bộ Sưu Tập Của Tôi
             {nfts.length > 0 && <span className="count-badge">{nfts.length}</span>}
           </h2>
-          <button className="btn btn-ghost btn-sm" onClick={onRefresh} disabled={loading}>↻ Làm mới</button>
+          <button className="btn btn-ghost btn-sm" onClick={onRefresh} disabled={loading}>
+            ↻ Làm mới
+          </button>
         </div>
         {nfts.length > 0 && (
           <div className="gallery-controls">
@@ -45,7 +46,7 @@ export default function NFTGallery({ nfts, loading, address, onRefresh }) {
         : loading
         ? <div className="loading-grid">{[1,2,3].map(i => <div key={i} className="skeleton-card" />)}</div>
         : filtered.length === 0
-        ? <div className="empty-state"><span className="empty-icon">{search ? "🔍" : "🖼"}</span><p>{search ? "Không tìm thấy NFT phù hợp" : "Chưa có NFT nào. Hãy mint NFT đầu tiên!"}</p></div>
+        ? <div className="empty-state"><span className="empty-icon">{search ? "🔍" : "🖼"}</span><p>{search ? "Không tìm thấy NFT" : "Chưa có NFT nào. Hãy mint NFT đầu tiên!"}</p></div>
         : <div className="nft-grid">{filtered.map(nft => <NFTCard key={nft.tokenId} nft={nft} />)}</div>
       }
     </div>
